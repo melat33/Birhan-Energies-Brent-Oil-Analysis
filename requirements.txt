@@ -1,0 +1,17 @@
+numpy
+pandas
+matplotlib
+seaborn
+
+scipy
+statsmodels
+
+pymc
+arviz
+
+scikit-learn
+
+jupyter
+ipykernel
+
+python-dateutil
