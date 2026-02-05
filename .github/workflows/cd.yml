@@ -1,0 +1,54 @@
+name: CD Pipeline for Birhan Energies
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:  # Manual trigger for client demos
+
+jobs:
+  deploy-dashboard:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download Docker image
+      uses: actions/download-artifact@v3
+      with:
+        name: docker-image
+        path: ./
+    
+    - name: Load Docker image
+      run: |
+        docker load -i birhan-image.tar
+    
+    - name: Deploy to Heroku (Example)
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+      run: |
+        docker tag birhan-brent-analysis:latest registry.heroku.com/$HEROKU_APP_NAME/web
+        docker push registry.heroku.com/$HEROKU_APP_NAME/web
+        heroku container:release web -a $HEROKU_APP_NAME
+    
+    - name: Deploy to AWS (Alternative)
+      if: failure()  # Fallback deployment
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: us-east-1
+      run: |
+        # Push to ECR and deploy to ECS
+        ./scripts/deploy_to_aws.sh
+    
+    - name: Generate deployment report
+      run: |
+        python scripts/generate_deployment_report.py
+        cat deployment_report.md
+    
+    - name: Send deployment notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: "🚀 Birhan Brent Analysis Deployed"
+        SLACK_MESSAGE: "New version deployed for client review"
