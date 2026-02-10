@@ -1,3 +1,4 @@
 data/
 env/
 frontend/node_modules/
+__pycache__/
