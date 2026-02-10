@@ -8,3 +8,8 @@
 - 5. Stationarity: Returns are approximately stationary for modeling
 
 ## Limitations:
+- CRITICAL: Correlation ≠ Causation
+-    • Statistical association doesn't prove causation
+-    • Temporal proximity suggests but doesn't confirm impact
+-    • Confounding variables may influence results
+-    • Multiple simultaneous events create attribution challenges
