@@ -1,4 +1,10 @@
 """
+Visualization - Professional Charts for Task 1
+"""
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
 Visualization - Professional Charts for Tasks 1 & 2
 """
 import matplotlib.pyplot as plt
@@ -90,6 +96,9 @@ class Task1Visualizer:
     
     def _plot_trend_analysis(self, ax):
         """Plot 3: Trend analysis"""
+        # Calculate rolling averages - FIXED: Changed 'M' to 'ME'
+        price_series = self.price_df.set_index('Date')['Price']
+        monthly_avg = price_series.resample('ME').mean()  # Changed from 'M' to 'ME'
         # Calculate rolling averages
         price_series = self.price_df.set_index('Date')['Price']
         monthly_avg = price_series.resample('ME').mean()
@@ -98,6 +107,7 @@ class Task1Visualizer:
                linewidth=2, color=self.colors[0], alpha=0.7, label='Monthly Average')
         
         # Add trend line
+        from scipy import stats
         x = np.arange(len(monthly_avg))
         slope, intercept = np.polyfit(x, monthly_avg.values, 1)
         trend_line = intercept + slope * x
@@ -180,6 +190,7 @@ class Task1Visualizer:
             'Economic': '#2E86AB',      # Blue
             'OPEC Decision': '#F18F01',  # Orange
             'Supply': '#6A994E',        # Green
+            'Environmental': '#A23B72'   # Purple
             'Environmental': '#A23B72',  # Purple
             'Pandemic': '#9B59B6',       # Purple (alternative)
             'Supply/Demand': '#3498DB',  # Light Blue
@@ -219,6 +230,7 @@ class Task1Visualizer:
         print("   • Bayesian change point detection")
         print("   • Quantify exact event impacts")
         print("   • Statistical significance testing")
+        print("="*80)
         print("="*80)
 
 
